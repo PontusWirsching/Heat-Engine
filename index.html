@@ -9,17 +9,45 @@
 
 
 
-
+		<!--
 		<script type="text/javascript" src="engine/engine.js"></script>
 		<script type="text/javascript" src="engine/math.js"></script>
-		<script type="text/javascript" src="engine/particle.js"></script>
 		<script type="text/javascript" src="engine/graphics.js"></script>
 		<script type="text/javascript" src="engine/physics.js"></script>
-		
-		<script type="text/javascript" src="game/Level.js"></script>
+		-->
+
+		<script type="text/javascript" src="versions/engine-1.0.js"></script>
 
 		<script type="text/javascript" src="main.js"></script>
 
+		<script type="text/javascript">
+
+		window.addEventListener("load", function() {
+			
+			document.addEventListener("touchstart", function(e) {
+				var touchobj = e.changedTouches[0];
+				engine.mb = true;
+				engine.mx = touchobj.screenX;
+				engine.my = touchobj.screenY;
+				e.preventDefault();
+			});
+
+			document.addEventListener("touchmove", function(e) {
+				var touchobj = e.changedTouches[0];
+				engine.mx = touchobj.screenX;
+				engine.my = touchobj.screenY;
+				e.preventDefault();
+			});
+
+			document.addEventListener("touchend", function(e) {
+				var touchobj = e.changedTouches[0];
+				engine.mb = false;
+				e.preventDefault();
+			});
+
+		});
+
+		</script>
 
 	</head>
 

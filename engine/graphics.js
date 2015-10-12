@@ -67,7 +67,6 @@ function Animation(name, img, spriteWidth, spriteHeight, fps, loop, numf) {
 	this.spriteHeight = spriteHeight;
 	this.fps = fps;
 	this.play = false;
-	this.flip = false;
 	this.loop = loop;
 	this.currentFrame = 0;
 	this.framesWide = this.image.width / this.spriteWidth;
@@ -87,10 +86,6 @@ function Animation(name, img, spriteWidth, spriteHeight, fps, loop, numf) {
 		this.play = false;
 	}
 
-	this.setFlip = function(f) {
-		this.flip = f;
-	}
-
 	this.update = function() {
 		if (this.play) this.timer++;
 		if (this.timer >= 60 / this.fps) {
@@ -102,14 +97,15 @@ function Animation(name, img, spriteWidth, spriteHeight, fps, loop, numf) {
 		}
 	}
 
-	this.draw = function(x, y, w, h) {
+	this.draw = function(x, y, w, h, flip) {
 		var xx = this.spriteWidth * Math.round(this.currentFrame % this.framesWide);
 		var yy = this.spriteHeight * Math.floor(this.currentFrame / this.framesHigh);
-		if (!this.flip) engine.drawImage(this.image, xx, yy, this.spriteWidth, this.spriteHeight, x, y, w, h);
+		if (!flip) engine.drawImage(this.image, xx, yy, this.spriteWidth, this.spriteHeight, x, y, w, h);
 		else {
 			engine.context.save();
+			engine.context.translate(engine.width, 0);
         	engine.context.scale(-1, 1);
-        	engine.context.translate(-x * engine.getScale(), y * engine.getScale());
+        	engine.context.translate(-x * engine.getScale() + engine.camera.position.getX() * 2, y * engine.getScale());
 			engine.drawImage(this.image, xx, yy, this.spriteWidth, this.spriteHeight, 0, 0, w, h);
 			engine.context.restore();
 		}
@@ -273,6 +269,10 @@ engine.graphics.setColor = function(color) {
 	engine.context.fillStyle = color;
 }
 
-engine.graphics.strokeRect = function(x, y, width, height) {
-	engine.context.strokeRect((x - width / 2) * engine.getScale(), (y - height / 2) * engine.getScale(), width * engine.getScale(), height * engine.getScale());
+engine.graphics.drawRect = function(x, y, width, height) {
+	engine.context.strokeRect((x - width / 2) * engine.getScale() + engine.width / 2 - engine.camera.position.getX(), (y - height / 2) * engine.getScale() + engine.height / 2 - engine.camera.position.getY(), width * engine.getScale(), height * engine.getScale());
+}
+
+engine.graphics.fillRect = function(x, y, width, height) {
+	engine.context.fillRect((x - width / 2) * engine.getScale() + engine.width / 2 - engine.camera.position.getX(), (y - height / 2) * engine.getScale() + engine.height / 2 - engine.camera.position.getY(), width * engine.getScale(), height * engine.getScale());
 }

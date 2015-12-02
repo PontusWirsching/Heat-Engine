@@ -12,34 +12,7 @@ $(document).ready(function() {
 	engine.init = function() {
 		engine.addSprite(new Sprite("grass", 0, 0, 256, 35, engine.getImage("grass")));
 
-		engine.addAnimation(new Animation('mossgolem_walk', engine.getImage("mossgolem"), 201, 201, 16, true));
-
-
-
-
-
-		var xml = new XMLHttpRequest();
-
-		xml.onreadystatechange = function() {
-	   		if (xml.readyState == 4 && xml.status == 200) {
-	    		
-	   			var xmlDoc = xml.responseXML;
-	   			var test = xmlDoc.getElementsByTagName("map")[0].attributes[1].value;
-
-	   			console.log(test);
-
-	    	}
-   		}
-		xml.open("GET", "assets/level.tmx", true);
-		xml.send();
-
-
-
-
-
-
-
-
+		engine.addAnimation(new Animation('mossgolem_walk', engine.getImage("mossgolem"), 201, 201, 64, true));
 
 
 
@@ -73,6 +46,8 @@ $(document).ready(function() {
 	var t = false;
 	var sx = 0;
 	var sy = 0;
+	global.numJumps = 0;
+	var maxJumps = 2;
 
 
 	engine.render = function() {
@@ -115,8 +90,11 @@ $(document).ready(function() {
 		// Check for jumping
 		if (engine.keys[32] && j) {
 			j = false;
-			box.velocity.setY(0);
-			box.applyForce(new Vector(0, 10));
+			if (global.numJumps < maxJumps) {
+				box.velocity.setY(0);
+				box.applyForce(new Vector(0, 10));
+			}
+			global.numJumps++;
 		} else if (!engine.keys[32] && !j) {
 			j = true;
 		}
@@ -126,7 +104,7 @@ $(document).ready(function() {
 
 
 		// Movement
-		var speed = 2;
+		var speed = 8;
 		if (engine.keys[65]) {
 			box.velocity.x = -speed;
 			playerFlip = false;
@@ -156,11 +134,11 @@ $(document).ready(function() {
 		for (var i = 0; i < world.objects.length; i++) {
 			if (world.objects[i].name == "floor") {
 				engine.drawSprite("grass", world.objects[i].position.getX(), world.objects[i].position.getY(), world.objects[i].size.getWidth(), world.objects[i].size.getHeight());
-				engine.graphics.drawRect(world.objects[i].position.getX(), world.objects[i].position.getY(), world.objects[i].size.getWidth(), world.objects[i].size.getHeight());
+				//engine.graphics.drawRect(world.objects[i].position.getX(), world.objects[i].position.getY(), world.objects[i].size.getWidth(), world.objects[i].size.getHeight());
 			}
 		}
 
-		engine.graphics.drawRect(box.position.getX(), box.position.getY(), box.size.getWidth(), box.size.getHeight());
+		//engine.graphics.drawRect(box.position.getX(), box.position.getY(), box.size.getWidth(), box.size.getHeight());
 
 
 	}

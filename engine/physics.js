@@ -72,6 +72,7 @@ function World() {
 
 					if (willBe.intersects(o2)) {
 						didCollideY = true;
+						global.numJumps = 0;
 						o.velocity.setY(0);
 						break;
 					}
